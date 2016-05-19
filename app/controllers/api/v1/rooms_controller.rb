@@ -1,22 +1,30 @@
-class Api::V1::RoomsController < ApiController
-  before_action :restrict_access
+module Api
+  module V1
+    class RoomsController < ApiController
+      before_action :restrict_access
 
-  def index
-    respond_with Room.all
-  end
+      def index
+        respond_with Room.all
+      end
 
-  def create
-    respond_with Room.create(room_params), location: nil
-  end
+      def show
+        respond_with Room.find(params[:id])
+      end
 
-  private
+      def create
+        respond_with Room.create(room_params), location: nil
+      end
 
-  def room_params
-    params.require(:room).permit(:name, :price)
-  end
+      private
 
-  def restrict_access
-    api_key = ApiKey.find_by(access_token: params[:api_key])
-    head :unauthorized unless api_key
+      def room_params
+        params.require(:room).permit(:name, :price)
+      end
+
+      def restrict_access
+        api_key = ApiKey.find_by(access_token: params[:api_key])
+        head :unauthorized unless api_key
+      end
+    end
   end
 end
