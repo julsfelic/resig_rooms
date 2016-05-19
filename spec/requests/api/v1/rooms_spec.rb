@@ -20,5 +20,9 @@ RSpec.describe 'GET /api/v1/rooms?api_key=<API_KEY>', type: :request do
     })
   end
 
-  # sad path
+  it 'returns a 401 unauthorized if not given a valid API key' do
+    get "/api/v1/rooms?api_key=invalidkey"
+
+    expect(response.status).to eq 401
+  end
 end
