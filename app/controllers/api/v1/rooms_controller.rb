@@ -15,6 +15,14 @@ module Api
         respond_with Room.create(room_params), location: nil
       end
 
+      def destroy
+        if room = Room.find_by(id: params[:id])
+          respond_with room.destroy
+        else
+          head :not_found
+        end
+      end
+
       private
 
       def room_params
