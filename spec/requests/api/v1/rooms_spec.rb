@@ -45,7 +45,7 @@ RSpec.describe 'POST /api/v1/rooms?api_key<API_KEY>', type: :request do
     )
   end
 
-  it 'returns a 422 unprocessible entity if not give valid params' do
+  it 'returns a 422 unprocessible entity if not given valid params' do
     user = create(:user)
     user.api_keys << create(:api_key)
     access_token = user.api_keys.first.access_token
@@ -54,5 +54,28 @@ RSpec.describe 'POST /api/v1/rooms?api_key<API_KEY>', type: :request do
     post "/api/v1/rooms?api_key=#{access_token}", invalid_params
 
     expect(response.status).to eq 422
+  end
+end
+
+RSpec.describe 'DELETE /api/v1/rooms/:id?api_key=<API_KEY>' do
+  it 'deletes a room' do
+    user = create(:user)
+    user.api_keys << create(:api_key)
+    access_token = user.api_keys.first.access_token
+    room1 = create(:room)
+
+    delete "/api/v1/rooms/#{room1.id}?api_key=#{access_token}"
+
+    expect(response.status).to eq 204
+  end
+
+  it 'returns a 404 not found if not given valid params' do
+    user = create(:user)
+    user.api_keys << create(:api_key)
+    access_token = user.api_keys.first.access_token
+
+    delete "/api/v1/rooms/23?api_key=#{access_token}"
+
+    expect(response.status).to eq 404
   end
 end
