@@ -2,6 +2,7 @@ module Api
   module V1
     class RoomsController < ApiController
       before_action :restrict_access
+      before_action :cors_set_access_control_headers
 
       def index
         respond_with Room.all
@@ -32,6 +33,13 @@ module Api
       def restrict_access
         api_key = ApiKey.find_by(access_token: params[:api_key])
         head :unauthorized unless api_key
+      end
+
+      def cors_set_access_control_headers
+        headers['Access-Control-Allow-Origin'] = '*'
+        headers['Access-Control-Allow-Methods'] = 'POST, GET, PUT, DELETE'
+        headers['Access-Control-Allow-Headers'] = 'Origin, Content-Type, Accept, Authorization, Token'
+        headers['Access-Control-Max-Age'] = '1728000'
       end
     end
   end
